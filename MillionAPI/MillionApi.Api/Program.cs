@@ -1,5 +1,11 @@
+using MillionApi.Application;
+using MillionApi.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 {
+    builder.Services
+        .AddApplication()
+        .AddInfrastructure(builder.Configuration);
     builder.Services.AddControllers();
 }
 
@@ -11,11 +17,10 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
-app.UseCors("AllowAll");
-
 var app = builder.Build();
 {
     app.UseHttpsRedirection();
+    app.UseCors("AllowAll");
     app.MapControllers();
     app.Run();
 }
