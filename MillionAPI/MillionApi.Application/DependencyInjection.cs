@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using MillionApi.Application.Service.Property;
 using MillionApi.Application.Services.Property;
 
 namespace MillionApi.Application

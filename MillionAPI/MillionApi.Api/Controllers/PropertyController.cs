@@ -5,7 +5,7 @@ using MillionApi.Contracts.Property;
 namespace MillionApi.Api.Controllers
 {
     [ApiController]
-    [Route("api/property")]
+    [Route("api")]
     public class PropertyController : ControllerBase
     {
         private readonly IPropertyService _propertyService;
@@ -14,16 +14,15 @@ namespace MillionApi.Api.Controllers
             _propertyService = propertyService;
         }
 
-        [HttpGet("{name}")]
-        public async Task<IActionResult> GetByName(string name)
+        [HttpGet("property/{name}")]
+        [ProducesResponseType(typeof(PropertyResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByName([FromRoute] GetPropertyByNameRequest req, CancellationToken ct)
         {
-            var propertyResult = await _propertyService.GetPropertyByNameAsync(name);
-            if (propertyResult is null)
-            {
-                return NotFound($"Property with name '{name}' not found.");
-            }
+            var propertyResult = await _propertyService.GetPropertyByNameAsync(req.Name.Trim(), ct);
 
-            var response =  new PropertyResponse(
+            var response = new PropertyResponse(
                 propertyResult.Id,
                 propertyResult.Name,
                 propertyResult.Address,
