@@ -18,9 +18,14 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseCors("AllowAll");
+app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
 {
-    app.UseHttpsRedirection();
-    app.UseCors("AllowAll");
-    app.MapControllers();
-    app.Run();
+    await scope.ServiceProvider.UseInfrastructureAsync();
 }
+
+app.Run();

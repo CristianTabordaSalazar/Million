@@ -5,6 +5,7 @@ using MillionApi.Infrastructure.Persistence;
 using MillionApi.Infrastructure.Repositories;
 using MillionApi.Infrastructure.Options;
 using MillionApi.Application.Common.Interfaces.Persistence;
+using MillionApi.Infrastructure.Indexes;
 
 namespace MillionApi.Infrastructure
 {
@@ -22,11 +23,20 @@ namespace MillionApi.Infrastructure
 
             MongoMappings.Register();
             services.AddSingleton<MongoDbContext>();
-            services.AddSingleton<IndexesInitializer>();
+
+            services.AddSingleton<IIndexesInitializer, PropertyIndexesInitializer>();
+            services.AddSingleton<IIndexesInitializer, OwnerIndexesInitializer>();
 
             services.AddScoped<IPropertyRepository, PropertyRepository>();
 
             return services;
+        }
+
+        public static async Task UseInfrastructureAsync(this IServiceProvider sp, CancellationToken ct = default)
+        {
+            var initializers = sp.GetServices<IIndexesInitializer>();
+            foreach (var init in initializers)
+                await init.CreateAsync(ct);
         }
     }
 }

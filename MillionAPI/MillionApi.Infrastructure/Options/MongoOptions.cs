@@ -7,5 +7,6 @@ namespace MillionApi.Infrastructure.Options
         public string Database { get; set; } = string.Empty;
 
         public string PropertyCollectionName { get; set; } = "properties";
+        public string OwnerCollectionName { get; set; } = "owners";
     }
 }

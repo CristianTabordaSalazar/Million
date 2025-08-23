@@ -1,17 +1,17 @@
 using MongoDB.Driver;
 using MillionApi.Domain.Entities;
+using MillionApi.Infrastructure.Persistence;
 
-namespace MillionApi.Infrastructure.Persistence
+namespace MillionApi.Infrastructure.Indexes
 {
-    public sealed class IndexesInitializer
+    public sealed class PropertyIndexesInitializer : IIndexesInitializer
     {
         private readonly MongoDbContext _ctx;
 
-        public IndexesInitializer(MongoDbContext ctx) => _ctx = ctx;
+        public PropertyIndexesInitializer(MongoDbContext ctx) => _ctx = ctx;
 
         public async Task CreateAsync(CancellationToken ct = default)
         {
-            // Index único por Name (case-insensitive)
             var keys = Builders<Property>.IndexKeys.Ascending(x => x.Name);
 
             var collation = new Collation(locale: "en", strength: CollationStrength.Secondary);
@@ -25,11 +25,11 @@ namespace MillionApi.Infrastructure.Persistence
             var model = new CreateIndexModel<Property>(keys, opts);
             await _ctx.Properties.Indexes.CreateOneAsync(model, cancellationToken: ct);
 
-            // Otros índices recomendados (búsquedas frecuentes)
-            // Ej: Address
             var addressIndex = new CreateIndexModel<Property>(
                 Builders<Property>.IndexKeys.Ascending(x => x.Address),
-                new CreateIndexOptions { Name = "ix_properties_address" });
+                new CreateIndexOptions { Name = "ix_properties_address" }
+            );
+
             await _ctx.Properties.Indexes.CreateOneAsync(addressIndex, cancellationToken: ct);
         }
     }

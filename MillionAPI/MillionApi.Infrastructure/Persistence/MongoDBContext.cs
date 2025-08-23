@@ -18,5 +18,8 @@ namespace MillionApi.Infrastructure.Persistence
 
         public IMongoCollection<Property> Properties
             => _db.GetCollection<Property>(_opts.PropertyCollectionName);
+
+        public IMongoCollection<Owner> Owners
+            => _db.GetCollection<Owner>(_opts.OwnerCollectionName);
     }
 }
