@@ -29,8 +29,13 @@ namespace MillionApi.Infrastructure.Indexes
                 Builders<Property>.IndexKeys.Ascending(x => x.Address),
                 new CreateIndexOptions { Name = "ix_properties_address" }
             );
-
             await _ctx.Properties.Indexes.CreateOneAsync(addressIndex, cancellationToken: ct);
+
+            var priceIndex = new CreateIndexModel<Property>(
+                Builders<Property>.IndexKeys.Ascending(x => x.Price),
+                new CreateIndexOptions { Name = "ix_properties_price" }
+            );
+            await _ctx.Properties.Indexes.CreateOneAsync(priceIndex, cancellationToken: ct);
         }
     }
 }
