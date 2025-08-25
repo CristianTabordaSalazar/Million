@@ -11,10 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:3000",   // Next.js dev
+            "http://127.0.0.1:3000"    // opcional, por si usas 127.0.0.1
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        // solo si usarás cookies/token en cookies:
+        //.AllowCredentials()
+        ;
+    });
 });
 
 builder.Services.AddProblemDetails();
@@ -25,7 +33,7 @@ var app = builder.Build();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
+app.UseCors("FrontendPolicy");
 app.MapControllers();
 
 using (var scope = app.Services.CreateScope())

@@ -11,7 +11,6 @@ export function useProperties(filters: Filters) {
   });
 }
 
-'use client';
 import { fetchPropertyById } from '@/lib/api';
 
 export function useProperty(id: string) {
