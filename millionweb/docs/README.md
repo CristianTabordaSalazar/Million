@@ -43,7 +43,7 @@ src/
 ### Environment Variables
 Create `.env.local` in the project root:
 ```
-NEXT_PUBLIC_API_BASE=http://localhost:5211
+NEXT_PUBLIC_API_BASE=http://localhost:5211/api
 ```
 
 ### Install & Run
