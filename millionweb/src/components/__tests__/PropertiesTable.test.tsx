@@ -9,18 +9,16 @@ const data = [
 ];
 
 describe('PropertiesTable', () => {
-  test('renderiza headers y filas con formateo de precio y links', () => {
+  test('Renders table rows and columns', () => {
     render(<PropertiesTable data={data as any} />);
 
     const table = screen.getByRole('table');
 
-    // Headers
     const headers = within(table).getAllByRole('columnheader');
     expect(headers.map((h) => h.textContent?.trim())).toEqual(
       ['Name', 'Address', 'Price', 'Year', 'Action']
     );
 
-    // Filas del cuerpo (omite la fila de header)
     const allRows = within(table).getAllByRole('row');
     const bodyRows = allRows.slice(1);
     expect(bodyRows).toHaveLength(2);

@@ -31,13 +31,13 @@ namespace MillionApi.Api.Tests
         {
             // Arrange
             var ct = new CancellationTokenSource().Token;
-            var inputName = "  Casa Azul  ";
-            var trimmed = "Casa Azul";
+            var inputName = "  Blue House  ";
+            var trimmed = "Blue House";
 
             var resultFromService = new PropertyResult(
                 Id: Guid.NewGuid(),
                 Name: trimmed,
-                Address: "Calle 123",
+                Address: "Street 123",
                 Price: 1000000m,
                 CodeInternal: "ABC-123",
                 Year: 2020
@@ -174,7 +174,6 @@ namespace MillionApi.Api.Tests
         public async Task List_Should_Normalize_Page_And_PageSize_And_Trim_Filters_Before_Calling_Service()
         {
             // Arrange
-            // Capturamos los argumentos reales con Callback
             string? capturedName = null, capturedAddress = null;
             int capturedPage = -1, capturedPageSize = -1;
 

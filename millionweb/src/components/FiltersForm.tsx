@@ -15,7 +15,6 @@ function isFiniteNumber(n: unknown): n is number {
 }
 
 function normalizeNumbers<T extends Partial<Filters>>(x: T): T {
-  // Convierte NaN a undefined SOLO en campos numéricos opcionales
   const out: any = { ...x };
   if (!isFiniteNumber(out.minPrice)) out.minPrice = undefined;
   if (!isFiniteNumber(out.maxPrice)) out.maxPrice = undefined;
@@ -23,19 +22,17 @@ function normalizeNumbers<T extends Partial<Filters>>(x: T): T {
 }
 
 export default function FiltersForm(props: {
-  initial: Partial<Filters>; // { pageSize: 10 | 20 | 50, ...}
+  initial: Partial<Filters>;
   onChange: (f: Filters) => void;
 }) {
   const { initial, onChange } = props;
 
-  // estado controlado (usa "" para inputs de texto y "" para numéricos vacíos)
   const [name, setName] = useState(initial.name ?? '');
   const [address, setAddress] = useState(initial.address ?? '');
-  const [minPrice, setMinPrice] = useState<string>('');  // importante: string
-  const [maxPrice, setMaxPrice] = useState<string>('');  // importante: string
+  const [minPrice, setMinPrice] = useState<string>('');
+  const [maxPrice, setMaxPrice] = useState<string>('');
   const [pageSize, setPageSize] = useState<number>(initial.pageSize ?? 10);
 
-  // Construye el “payload base” que usan debounce y submit
   const basePayload = useMemo<Filters>(() => {
     const raw: Partial<Filters> = {
       name: name || undefined,
@@ -48,27 +45,23 @@ export default function FiltersForm(props: {
     return normalizeNumbers(raw) as Filters;
   }, [name, address, minPrice, maxPrice, pageSize]);
 
-  // Debounce (400ms). Si falla la validación, no lanzamos la excepción.
   useEffect(() => {
     const t = setTimeout(() => {
       try {
         const parsed = FiltersSchema.parse(basePayload);
         onChange(parsed);
       } catch {
-        // Silenciar validaciones mientras el usuario escribe
       }
     }, 400);
     return () => clearTimeout(t);
   }, [basePayload, onChange]);
 
-  // Submit inmediato (sin debounce) usando la misma normalización
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
       const parsed = FiltersSchema.parse(basePayload);
       onChange(parsed);
     } catch {
-      // si el submit no pasa validación, puedes decidir mostrar errores aquí
     }
   }
 
@@ -77,12 +70,10 @@ export default function FiltersForm(props: {
     setAddress('');
     setMinPrice('');
     setMaxPrice('');
-    // dispara onChange con defaults page=1 y el pageSize actual
     try {
       const parsed = FiltersSchema.parse({ page: 1, pageSize });
       onChange(parsed as Filters);
     } catch {
-      // no debería fallar
     }
   }
 

@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import FiltersForm from '../FiltersForm';
 import { vi, describe, test, expect } from 'vitest';
 
-// Mock del schema (ajústalo si tu esquema real difiere)
 vi.mock('@/lib/schemas', async () => {
   const z = await import('zod');
   const FiltersSchema = z.object({
@@ -18,7 +17,7 @@ vi.mock('@/lib/schemas', async () => {
 });
 
 describe('FiltersForm', () => {
-  test('dispara onChange con debounce al escribir', async () => {
+  test('Triggers onChange with debounce', async () => {
     const user = userEvent.setup({ delay: null });
     const onChange = vi.fn();
 
@@ -29,7 +28,6 @@ describe('FiltersForm', () => {
     await user.type(screen.getByLabelText(/min price/i), '1000');
     await user.type(screen.getByLabelText(/max price/i), '5000');
 
-    // Espera el debounce real (400ms) y luego afirma con waitFor
     await new Promise((r) => setTimeout(r, 450));
 
     await waitFor(() => {
@@ -47,7 +45,7 @@ describe('FiltersForm', () => {
     });
   });
 
-  test('submit con botón "Search" llama onChange con page=1', async () => {
+  test('Submit sets page=1', async () => {
     const user = userEvent.setup({ delay: null });
     const onChange = vi.fn();
 
@@ -62,7 +60,7 @@ describe('FiltersForm', () => {
     expect(payload).toMatchObject({ name: 'Centro', page: 1, pageSize: 20 });
   });
 
-  test('botón "Clear" limpia y envía defaults', async () => {
+  test('Clear resets filters', async () => {
     const user = userEvent.setup({ delay: null });
     const onChange = vi.fn();
 

@@ -6,7 +6,6 @@ import { es } from 'date-fns/locale';
 type Props = { data: PropertyDetailResponse };
 
 export default function PropertyDetailCard({ data }: Props) {
-  // Si tu API retorna un GUID vacío cuando no hay owner
   const ownerExists =
     !!data.owner &&
     !!data.owner.id &&

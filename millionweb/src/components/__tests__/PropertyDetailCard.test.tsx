@@ -26,7 +26,6 @@ function makeData(overrides: Partial<any> = {}) {
   };
 }
 
-// Helper para afirmar/convertir a HTMLElement de forma segura
 function asHTMLElement(el: Element | null): HTMLElement {
   if (!(el instanceof HTMLElement)) {
     throw new Error('Elemento no es un HTMLElement (o es null).');
@@ -35,29 +34,24 @@ function asHTMLElement(el: Element | null): HTMLElement {
 }
 
 describe('PropertyDetailCard', () => {
-  test('muestra datos base, imagen y owner con foto', () => {
+  test('Renders base data, image, and owner', () => {
     const data = makeData();
     render(<PropertyDetailCard data={data} />);
 
-    // Card base (scope seguro a HTMLElement)
     const baseHeading = screen.getByRole('heading', { name: data.name });
     const baseCard = asHTMLElement(baseHeading.closest('.card'));
 
-    // Imagen principal
     const img = within(baseCard).getByRole('img', { name: data.name });
     expect(img).toHaveAttribute('src', data.firstImageUrl);
 
-    // Address de la card base (scope del <p>)
     const addrStrong = within(baseCard).getByText(/address:/i);
     const addrP = asHTMLElement(addrStrong.closest('p'));
     expect(within(addrP).getByText(/av\. 123/i)).toBeInTheDocument();
 
-    // Otros campos base
     expect(within(baseCard).getByText(/\$250,000\.00/)).toBeInTheDocument();
     expect(within(baseCard).getByText(/abc-001/i)).toBeInTheDocument();
     expect(within(baseCard).getByText('2020')).toBeInTheDocument();
 
-    // Card de Owner
     const ownerHeading = screen.getByRole('heading', { name: /owner/i });
     const ownerCard = asHTMLElement(ownerHeading.closest('.card'));
 
@@ -68,7 +62,6 @@ describe('PropertyDetailCard', () => {
     const ownerAddrP = asHTMLElement(ownerAddrStrong.closest('p'));
     expect(within(ownerAddrP).getByText(/calle 9/i)).toBeInTheDocument();
 
-    // Tabla de trazas: 1 header + 2 filas
     const table = screen.getByRole('table');
     const rows = within(table).getAllByRole('row');
     expect(rows).toHaveLength(3);
@@ -78,7 +71,7 @@ describe('PropertyDetailCard', () => {
     expect(screen.getByText(/\$80,000\.00/)).toBeInTheDocument();
   });
 
-  test('muestra placeholders cuando no hay imagen y no hay owner', () => {
+  test('Displays placeholders when there is no image and no owner', () => {
     const EMPTY_GUID = '00000000-0000-0000-0000-000000000000';
     const data = makeData({ firstImageUrl: undefined, owner: { id: EMPTY_GUID }, traces: [] });
     render(<PropertyDetailCard data={data} />);
