@@ -30,26 +30,14 @@ export default function WelcomePage() {
               <hr className="my-4" />
 
               <div className="row g-4">
-                {/* <div className="col-md-6">
-                  <div className="p-4 bg-light rounded h-100">
-                    <h5 className="fw-semibold mb-2">What’s inside</h5>
-                    <ul className="mb-0">
-                      <li>Property listing with filters (name, address, price range)</li>
-                      <li>Detail view per property</li>
-                      <li>Responsive UI powered by Bootstrap</li>
-                      <li>Data fetching via React Query</li>
-                    </ul>
-                  </div>
-                </div> */}
-
                 <div className="col-md-12">
                   <div className="p-4 bg-light rounded h-100">
                     <h5 className="fw-semibold mb-2">Stack</h5>
                     <ul className="mb-0">
-                      <li>Frontend: Next.js + React + React Query</li>
+                      <li>Frontend: Next.js + React </li>
                       <li>Backend: ASP.NET Core 9.0</li>
                       <li>Database: MongoDB</li>
-                      <li>Clean Architecture, proper error handling</li>
+                      <li>Clean Architecture</li>
                     </ul>
                   </div>
                 </div>

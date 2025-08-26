@@ -13,7 +13,6 @@ export default function PropertyDetailCard({ data }: Props) {
 
   return (
     <div className="row g-4">
-      {/* Imagen + datos base */}
       <div className="col-12 col-md-5">
         <div className="card h-100">
           {data.firstImageUrl ? (
@@ -53,7 +52,6 @@ export default function PropertyDetailCard({ data }: Props) {
         </div>
       </div>
 
-      {/* Owner */}
       <div className="col-12 col-md-7">
         <div className="card h-100">
           <div className="card-body">
@@ -100,7 +98,6 @@ export default function PropertyDetailCard({ data }: Props) {
         </div>
       </div>
 
-      {/* Traces */}
       <div className="col-12">
         <div className="card">
           <div className="card-body">

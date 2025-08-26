@@ -43,6 +43,12 @@ builder.Services.AddSwaggerGen(opt =>
     {
         opt.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
     }
+
+    var xmlContractsPath = Path.Combine(AppContext.BaseDirectory, "MillionApi.Contracts.xml");
+    if (File.Exists(xmlContractsPath))
+    {
+        opt.IncludeXmlComments(xmlContractsPath, includeControllerXmlComments: true);
+    }
 });
 
 var app = builder.Build();

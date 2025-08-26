@@ -5,11 +5,19 @@ using Microsoft.Extensions.Logging;
 using MillionApi.Application.Common.Exceptions;
 using MongoDB.Driver;
 
+/// <summary>
+/// Middleware to handle exceptions globally and return appropriate HTTP responses.
+/// </summary>
 public sealed class GlobalExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
     private readonly ProblemDetailsFactory _problemDetailsFactory;
 
+    /// <summary>
+    /// Constructor for <see cref="GlobalExceptionHandlingMiddleware"/>.
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="problemDetailsFactory"></param>
     public GlobalExceptionHandlingMiddleware(
         ILogger<GlobalExceptionHandlingMiddleware> logger,
         ProblemDetailsFactory problemDetailsFactory)
@@ -18,6 +26,9 @@ public sealed class GlobalExceptionHandlingMiddleware : IMiddleware
         _problemDetailsFactory = problemDetailsFactory;
     }
 
+    /// <summary>
+    /// Invokes the middleware to handle exceptions.
+    /// </summary>
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
