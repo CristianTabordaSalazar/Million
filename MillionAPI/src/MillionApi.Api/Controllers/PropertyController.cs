@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MillionApi.Application.Services.Property;
 using MillionApi.Contracts.Property;
 using MillionApi.Contracts.Common;
+using MillionApi.Contracts.Owner;
 
 namespace MillionApi.Api.Controllers
 {
@@ -74,6 +75,30 @@ namespace MillionApi.Api.Controllers
                 propertyResult.CodeInternal,
                 propertyResult.Year
             );
+            return Ok(response);
+        }
+
+        [HttpGet("properties/{id:guid}/detail")]
+        [ProducesResponseType(typeof(PropertyDetailResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetDetailById([FromRoute] Guid id, CancellationToken ct)
+        {
+            var result = await _propertyService.GetDetailByIdAsync(id, ct);
+
+            var response = new PropertyDetailResponse(
+                result.Id,
+                result.Name,
+                result.Address,
+                result.Price,
+                result.CodeInternal,
+                result.Year,
+                result.Owner is null
+                    ? new OwnerResponse(Guid.Empty, "", "", "", DateTime.MinValue)
+                    : new OwnerResponse(result.Owner.Id, result.Owner.Name, result.Owner.Address, result.Owner.Photo, result.Owner.DateOfBirth),
+                result.FirstImageUrl,
+                result.Traces.Select(t => new PropertyTraceResponse(t.Id, t.DateSale, t.Name, t.Value, t.Tax)).ToList()
+            );
+
             return Ok(response);
         }
     }

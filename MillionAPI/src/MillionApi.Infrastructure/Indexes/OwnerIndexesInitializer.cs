@@ -40,6 +40,19 @@ namespace MillionApi.Infrastructure.Indexes
             );
 
             await _ctx.Owners.Indexes.CreateOneAsync(dobIndex, cancellationToken: ct);
+
+            var compoundKeys = Builders<Owner>.IndexKeys
+                .Ascending(x => x.Name)
+                .Ascending(x => x.DateOfBirth);
+
+            var compoundOpts = new CreateIndexOptions<Owner>
+            {
+                Name = "ix_owners_name_dateOfBirth",
+                Collation = collation
+            };
+
+            var compoundModel = new CreateIndexModel<Owner>(compoundKeys, compoundOpts);
+            await _ctx.Owners.Indexes.CreateOneAsync(compoundModel, cancellationToken: ct);
         }
     }
 }

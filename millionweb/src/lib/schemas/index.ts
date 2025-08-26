@@ -1,2 +1,2 @@
-export * from '../schemas/property.schemas';
+export * from './property.schema';
 export * from '../schemas/filters.schema';

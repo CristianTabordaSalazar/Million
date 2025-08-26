@@ -67,52 +67,32 @@ namespace MillionApi.Infrastructure.Repositories
             return (items, total);
         }
 
+        public async Task<(Property Property, Owner? Owner, PropertyImage? FirstImage, List<PropertyTrace> Traces)?>GetDetailByIdAsync(
+            Guid id, CancellationToken ct = default)
+        {
+            var filter = Builders<Property>.Filter.Eq(p => p.Id, id);
+            var property = await _ctx.Properties.Find(filter).FirstOrDefaultAsync(ct);
 
-        // public async Task<bool> ExistsByNameAsync(string name, CancellationToken ct = default)
-        // {
-        //     var filter = Builders<Property>.Filter.Eq(p => p.Name, name);
-        //     var options = new CountOptions { Collation = new Collation("en", strength: CollationStrength.Secondary) };
-        //     var count = await _ctx.Properties.CountDocumentsAsync(filter, options, ct);
-        //     return count > 0;
-        // }
+            if (property is null)
+                return null;
 
-        // public async Task<IReadOnlyList<Property>> SearchAsync(
-        //     string? name = null,
-        //     int page = 1,
-        //     int pageSize = 20,
-        //     CancellationToken ct = default)
-        // {
-        //     var filter = string.IsNullOrWhiteSpace(name)
-        //         ? Builders<Property>.Filter.Empty
-        //         : Builders<Property>.Filter.Regex(p => p.Name, new MongoDB.Bson.BsonRegularExpression(name, "i"));
+            // Owner
+            Owner? owner = null;
+            if (property.OwnerId != Guid.Empty)
+            {
+                var ownerFilter = Builders<Owner>.Filter.Eq(o => o.Id, property.OwnerId);
+                owner = await _ctx.Owners.Find(ownerFilter).FirstOrDefaultAsync(ct);
+            }
 
-        //     var opts = new FindOptions<Property>
-        //     {
-        //         Skip = (page - 1) * pageSize,
-        //         Limit = pageSize
-        //     };
+            // First enabled image
+            var imgFilter = Builders<PropertyImage>.Filter.Eq(i => i.PropertyId, property.Id);
+            var firstImage = await _ctx.PropertyImages.Find(imgFilter).FirstOrDefaultAsync(ct);
 
-        //     var cursor = await _ctx.Properties.FindAsync(filter, opts, ct);
-        //     return await cursor.ToListAsync(ct);
-        // }
+            // Traces
+            var traceFilter = Builders<PropertyTrace>.Filter.Eq(t => t.PropertyId, property.Id);
+            var traces = await _ctx.PropertyTraces.Find(traceFilter).ToListAsync(ct);
 
-        // public async Task AddAsync(Property entity, CancellationToken ct = default)
-        // {
-        //     await _ctx.Properties.InsertOneAsync(entity, cancellationToken: ct);
-        // }
-
-        // public async Task UpdateAsync(Property entity, CancellationToken ct = default)
-        // {
-        //     var filter = Builders<Property>.Filter.Eq(p => p.Id, entity.Id);
-        //     var result = await _ctx.Properties.ReplaceOneAsync(filter, entity, cancellationToken: ct);
-        //     if (result.MatchedCount == 0)
-        //         throw new KeyNotFoundException($"Property {entity.Id} not found.");
-        // }
-
-        // public async Task DeleteAsync(Guid id, CancellationToken ct = default)
-        // {
-        //     var filter = Builders<Property>.Filter.Eq(p => p.Id, id);
-        //     await _ctx.Properties.DeleteOneAsync(filter, ct);
-        // }
+            return (property, owner, firstImage, traces);
+        }
     }
 }

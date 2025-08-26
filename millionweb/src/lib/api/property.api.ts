@@ -1,5 +1,6 @@
 import { PropertySchema } from '@/lib/schemas';
 import { safeJson } from './helpers';
+import { PropertyDetailResponse, PropertyDetailSchema } from '../schemas/propertyDetailSchema.schema';
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE!;
 
@@ -33,4 +34,12 @@ export async function fetchPropertyById(id: string) {
 
   const data = await safeJson<unknown>(res);
   return PropertySchema.parse(data);
+}
+
+export async function fetchPropertyDetail(id: string): Promise<PropertyDetailResponse> {
+  const res = await fetch(`${BASE}/properties/${id}/detail`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to load property detail: ${res.status}`);
+
+  const data = await safeJson<unknown>(res);
+  return PropertyDetailSchema.parse(data);
 }

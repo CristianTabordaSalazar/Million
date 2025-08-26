@@ -1,5 +1,6 @@
 using MillionApi.Application.Common.Exceptions;
 using MillionApi.Application.Common.Interfaces.Persistence;
+using MillionApi.Application.Services.Owner;
 
 namespace MillionApi.Application.Services.Property
 {
@@ -52,6 +53,28 @@ namespace MillionApi.Application.Services.Property
                 property.Price,
                 property.CodeInternal,
                 property.Year
+            );
+        }
+
+        public async Task<PropertyDetailResult> GetDetailByIdAsync(Guid id, CancellationToken ct = default)
+        {
+            var detail = await _propertyRepository.GetDetailByIdAsync(id, ct);
+
+            if (detail is null)
+                throw new NotFoundException(nameof(Property), id.ToString());
+
+            var (property, owner, firstImage, traces) = detail.Value;
+
+            return new PropertyDetailResult(
+                property.Id,
+                property.Name,
+                property.Address,
+                property.Price,
+                property.CodeInternal,
+                property.Year,
+                owner is null ? null : new OwnerResult(owner.Id, owner.Name, owner.Address, owner.Photo, owner.DateOfBirth),
+                firstImage?.Url,
+                traces.Select(t => new PropertyTraceResult(t.Id, t.DateSale, t.Name, t.Value, t.Tax)).ToList()
             );
         }
     }

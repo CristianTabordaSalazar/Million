@@ -11,10 +11,7 @@ namespace MillionApi.Application.Common.Interfaces.Persistence
             int page, int pageSize, CancellationToken ct = default);
         Task<Property?> GetByIdAsync(Guid id, CancellationToken ct = default);
         Task<Property?> GetByNameAsync(string name, CancellationToken ct = default);
-
-        // Task AddAsync(Property entity, CancellationToken ct = default);
-        // Task UpdateAsync(Property entity, CancellationToken ct = default);
-        // Task DeleteAsync(Guid id, CancellationToken ct = default);
-        // Task<bool> ExistsByNameAsync(string name, CancellationToken ct = default);
+        Task<(Property Property, Owner? Owner, PropertyImage? FirstImage, List<PropertyTrace> Traces)?> GetDetailByIdAsync(
+            Guid id, CancellationToken ct = default);
     }
 }

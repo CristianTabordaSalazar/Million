@@ -26,6 +26,8 @@ namespace MillionApi.Infrastructure
 
             services.AddSingleton<IIndexesInitializer, PropertyIndexesInitializer>();
             services.AddSingleton<IIndexesInitializer, OwnerIndexesInitializer>();
+            services.AddSingleton<IIndexesInitializer, PropertyImageIndexesInitializer>();
+            services.AddSingleton<IIndexesInitializer, PropertyTraceIndexesInitializer>();
 
             services.AddScoped<IPropertyRepository, PropertyRepository>();
 

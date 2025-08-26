@@ -10,6 +10,7 @@ const initialFilters: Filters = { page: 1, pageSize: 10 };
 export default function PropertiesPage() {
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const { data, isLoading, isError } = useProperties(filters);
+  console.log(data);
 
   const total = data?.total ?? 0;
   const items = (data?.items as any[]) ?? [];

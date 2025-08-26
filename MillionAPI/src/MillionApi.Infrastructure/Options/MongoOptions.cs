@@ -8,5 +8,7 @@ namespace MillionApi.Infrastructure.Options
 
         public string PropertyCollectionName { get; set; } = "properties";
         public string OwnerCollectionName { get; set; } = "owners";
+        public string PropertyImageCollectionName { get; set; } = "property_images";
+        public string PropertyTraceCollectionName { get; set; } = "property_traces";
     }
 }
